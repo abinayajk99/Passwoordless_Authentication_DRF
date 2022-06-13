@@ -46,8 +46,9 @@ class SignupView(GenericAPIView):
             subject = 'This is form GST'
             email_from = settings.EMAIL_HOST_USER
             recipient_list = [user.email, ]
-            link = 'http://'+request.get_host()+'/api/signin'+'/'+user.email+'/'+Token.key
-            Context = {'name':user.username,'link':link,"token":Token.key}
+            link = 'http://'+request.get_host()+'/api/signin'+'?email='+user.email+'&token='+Token.key
+            magic_link =  f"http://localhost:3000/magiclink/{Token.key}/{user.email}"
+            Context = {'name':user.username,'link':link,"token":Token.key,"magic_link":magic_link}
             html_content = get_template(self.template_name).render(Context)
             msg = EmailMessage(subject, html_content, email_from, recipient_list)
             msg.content_subtype = "html"  # Main content is now text/html
@@ -65,15 +66,34 @@ class SigninView(GenericAPIView):
 
     serializer_class = UserSignInSerializer
 
-    def get(self,request,email,token):
+    def get(self,request):
+        email = request.GET.get('email')
+        token = request.GET.get('token')
         print("----------->data",email,token)
         return GenericResponse(
             success_msg="We have fetched data successfully", status=status.HTTP_400_BAD_REQUEST
         )
 
 
-    def post(self,request,email,token):
-        print(request.data)
+    # def post(self,request,email,token):
+    #     print(request.data)
+    #     serializer = UserSignInSerializer(data=request.data)
+    #     if serializer.is_valid():
+    #         url = 'http://'+request.get_host()+'/auth/token/'
+    #         data_dict = {'email':email,'token':token}
+    #         aa = requests.post(url,data=data_dict)
+    #         print("--------------------->aa",json.loads(aa.text))
+    #         return GenericResponse(
+    #         success_msg=json.loads(aa.text),
+    #         status=status.HTTP_200_OK)
+
+    #     return GenericResponse(
+    #         error_msg=serializer.errors, status=status.HTTP_400_BAD_REQUEST
+    #     )
+    def post(self,request):
+        print("REQUEST.DATA------------------------>",request.data)
+        email = request.GET.get('email')
+        token = request.GET.get('token')
         serializer = UserSignInSerializer(data=request.data)
         if serializer.is_valid():
             url = 'http://'+request.get_host()+'/auth/token/'

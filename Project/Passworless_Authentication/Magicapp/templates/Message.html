@@ -2,10 +2,15 @@
     <head>This is form GST</head>
     <body>
         <p>Hi <b>{{name}},</b></p>
+        <p>Here is your one-off verification link to sign in to MTD in the browser</p>
+        <button style="color:red;"><a href={{magic_link}}>signin to MTD</a></button>
+        <p>If this link fails to work, or you don't have access to your email on your device, type the following when prompted: <b>{{token}}</b></p>
         <p>
-            Thank you for registering with GosimplTax, please use this code to login <b>{{token}}</b>
-            {{link}} or, click on the below button.
+            For security reasons, the link can only be used once and expires in 15 Minutes.
         </p>
-        <button style="color:red;"><a href="{{link}}">Login</a></button>
+
+        <p>Thanks for using MTD! The MTD team</p> 
+        
+       
     </body>
 </html>

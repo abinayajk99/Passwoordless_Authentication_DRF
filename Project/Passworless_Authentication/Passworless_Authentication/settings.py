@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'Magicapp',
     'rest_framework.authtoken',
     'drfpasswordless',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -51,6 +52,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
 ]
 
 ROOT_URLCONF = 'Passworless_Authentication.urls'
@@ -148,4 +155,4 @@ EMAIL_HOST_USER="abinayajk1999@gmail.com"
 EMAIL_HOST='smtp.gmail.com'
 EMAIL_PORT=587
 EMAIL_USE_TLS=True
-EMAIL_HOST_PASSWORD="Abinaya$03"
+EMAIL_HOST_PASSWORD="fyibertiakqbyicu"
