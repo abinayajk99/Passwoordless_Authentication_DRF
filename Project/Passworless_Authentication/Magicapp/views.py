@@ -50,9 +50,15 @@ class SignupView(GenericAPIView):
             magic_link =  f"http://localhost:3000/magiclink/{Token.key}/{user.email}"
             Context = {'name':user.username,'link':link,"token":Token.key,"magic_link":magic_link}
             html_content = get_template(self.template_name).render(Context)
-            msg = EmailMessage(subject, html_content, email_from, recipient_list)
-            msg.content_subtype = "html"  # Main content is now text/html
-            msg.send()
+            try: 
+                msg = EmailMessage(subject, html_content, email_from, recipient_list)
+                msg.content_subtype = "html"  # Main content is now text/html
+                msg.send(fail_silently=True)
+            except :
+                return GenericResponse(
+                success_msg="we are not able to send Email. please, verify",
+                status=status.HTTP_200_OK,)
+
             return GenericResponse(
                 success_msg="We have send a code to you email",
                 status=status.HTTP_200_OK,
@@ -92,8 +98,8 @@ class SigninView(GenericAPIView):
     #     )
     def post(self,request):
         print("REQUEST.DATA------------------------>",request.data)
-        email = request.GET.get('email')
-        token = request.GET.get('token')
+        email = request.data.get('email')
+        token = request.data.get('token')
         serializer = UserSignInSerializer(data=request.data)
         if serializer.is_valid():
             url = 'http://'+request.get_host()+'/auth/token/'
@@ -107,3 +113,5 @@ class SigninView(GenericAPIView):
         return GenericResponse(
             error_msg=serializer.errors, status=status.HTTP_400_BAD_REQUEST
         )
+
+
